@@ -5,40 +5,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include "libft/libft.h"
 #include <unistd.h>
 #include <pthread.h>
 
 typedef struct s_philo
 {
-    int id;
-    long last_eat;
-    pthread_t thread;
-    struct s_pars *args;
+	int id;
+	pthread_mutex_t *left_fork;
+	pthread_mutex_t *right_fork;
+	long last_eat;
+	long	start_time;
+	pthread_t thread;
+	struct s_pars *args;
 } t_philo;
 
 typedef struct s_pars
 {
-    int n_philos;
-    int t_die;
-    int t_eat;
-    int t_sleep;
-    pthread_mutex_t *forks;
-    pthread_mutex_t mutex;
-    t_philo *philos;
+	int i;
+	int n_philos;
+	int t_die;
+	int t_eat;
+	int t_sleep;
+	int stop_simulation;
+	pthread_mutex_t *forks;
+	pthread_mutex_t mutex;
+	t_philo *philos;
 } t_pars;
 
 
-void			init_mutexes(t_pars *args);
-void			*philo_func(void *new);
-void			ft_set_param(t_pars *args, char **av);
-void			*philosopher_thread(void *arg);
-void			init_philosophers(t_pars *args);
-void			join_philosophers(t_pars *args);
-void 			destroy_mutexes(t_pars *args);
-void			print_state(t_pars *args, int id, const char *state);
-void			take_forks(t_philo *philo);
-void			put_forks(t_philo *philo);
+int             ft_isdigit(int c);
+int             ft_pars(char **av);
+int				ft_atoi(char *str);
 long			get_timestamp(void);
+void			ft_sleep(size_t time);
+void			*philo_func(void *new);
+void			put_forks(t_philo *philo);
+void            init_mutexes(t_pars *args);
+void			take_forks(t_philo *philo);
+void            ft_putchar_fd(char c, int fd);
+void 			destroy_mutexes(t_pars *args);
+void			*philosopher_thread(void *arg);
+void            ft_putendl_fd(char *s, int fd);
+void			join_philosophers(t_pars *args);
+void            init_philosophers(t_pars *args);
+void            ft_set_param(t_pars *args, char **av);
+void            print_state(t_pars *args, int id, const char *state);
 
 #endif

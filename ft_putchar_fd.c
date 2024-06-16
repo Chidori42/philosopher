@@ -1,30 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/07 04:17:13 by ael-fagr          #+#    #+#             */
-/*   Updated: 2023/11/19 05:42:54 by ael-fagr         ###   ########.fr       */
+/*   Created: 2023/11/01 15:51:14 by ael-fagr          #+#    #+#             */
+/*   Updated: 2024/06/07 09:46:09 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "philo.h"
 
-t_list	*ft_lstlast(t_list *lst)
+void	ft_putchar_fd(char c, int fd)
 {
-	t_list	*start;
-	int		i;
-
-	if (lst == NULL)
-		return (0);
-	start = lst;
-	i = 0;
-	while (start -> next != NULL)
-	{
-		start = start -> next;
-		i++;
-	}
-	return (start);
+	if (fd < 0)
+		return ;
+	write(fd, &c, 1);
 }
