@@ -9,5 +9,9 @@ void ft_set_param(t_pars *args, char **av)
 		args->t_die = ft_atoi(av[2]);
 		args->t_eat = ft_atoi(av[3]);
 		args->t_sleep = ft_atoi(av[4]);
+		if (av[5])
+			args->n_eat = ft_atoi(av[5]);
+		else
+			args->n_eat = -1;
 	}
 }

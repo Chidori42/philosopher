@@ -16,15 +16,15 @@ void *monitor_thread(void *arg)
 		current_time = get_timestamp();
 		while (++i < args->n_philos)
 		{
-			pthread_mutex_lock(&(args->forks[i]));
+			pthread_mutex_lock(&(args->dead));
 			if ((current_time - (args->philos[i].last_eat)) > (args->t_die))
 			{
 				print_state(args, args->philos[i].id, "died");
-				pthread_mutex_unlock(&(args->forks[i]));
 				args->stop_simulation = 1;
+				pthread_mutex_unlock(&(args->dead));
 				return (NULL);
 			}
-			pthread_mutex_unlock(&(args->forks[i]));
+			pthread_mutex_unlock(&(args->dead));
 		}
 		usleep(10000);
 	}
@@ -44,11 +44,9 @@ int main(int ac, char **av)
 		init_mutexes(&args);
 		init_philosophers(&args);
 		pthread_create(&monitor, NULL, monitor_thread, &args);
-		join_philosophers(&args);
 		pthread_join(monitor, NULL);
 		destroy_mutexes(&args);
 		free(args.philos);
-		free(args.forks);
 	}
 	else
 		printf("Check number of argiments\n");

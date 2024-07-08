@@ -18,39 +18,26 @@ void ft_sleep(size_t time)
 
 void print_state(t_pars *args, int id, const char *state)
 {
-	pthread_mutex_lock(&(args->mutex));
-	printf("%ld %d %s\n", get_timestamp() - args->philos[id - 1].start_time, id, state);
-	pthread_mutex_unlock(&(args->mutex));
+	pthread_mutex_lock(&(args->print_mutex));
+	printf("%ld %d %s\n", get_timestamp() - args->start_time, id, state);
+	pthread_mutex_unlock(&(args->print_mutex));
 }
 
 void take_forks(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
+	pthread_mutex_lock(&(philo->left_fork));
+	print_state(philo->args, philo->id , "has taken a fork");
+	if (philo->args->n_philos == 1)
 	{
-		pthread_mutex_lock(philo->right_fork);
-		print_state(philo->args, philo->id , "has taken a fork");
-		pthread_mutex_lock(philo->left_fork);
-		print_state(philo->args, philo->id , "has taken a fork");
+		ft_sleep(philo->args->t_die * 2);
+		return ;
 	}
-	else
-	{
-		pthread_mutex_lock(philo->left_fork);
-		print_state(philo->args, philo->id , "has taken a fork");
-		pthread_mutex_lock(philo->right_fork);
-		print_state(philo->args, philo->id , "has taken a fork");
-	}
+	pthread_mutex_lock(philo->right_fork);
+	print_state(philo->args, philo->id , "has taken a fork");
 }
 
 void put_forks(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(philo->right_fork);
-	}
-	else
-	{
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
-	}
+	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(&(philo->left_fork));
 }

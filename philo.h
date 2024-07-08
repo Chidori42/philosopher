@@ -11,12 +11,12 @@
 typedef struct s_philo
 {
 	int id;
-	pthread_mutex_t *left_fork;
-	pthread_mutex_t *right_fork;
+	int eat_count;
 	long last_eat;
-	long	start_time;
 	pthread_t thread;
 	struct s_pars *args;
+	pthread_mutex_t *right_fork;
+	pthread_mutex_t left_fork;
 } t_philo;
 
 typedef struct s_pars
@@ -26,9 +26,13 @@ typedef struct s_pars
 	int t_die;
 	int t_eat;
 	int t_sleep;
+	int n_eat;
+	long start_time;
 	int stop_simulation;
-	pthread_mutex_t *forks;
-	pthread_mutex_t mutex;
+	pthread_mutex_t print_mutex;
+	pthread_mutex_t meal_mutex;
+	pthread_mutex_t stop_meal;
+	pthread_mutex_t dead;
 	t_philo *philos;
 } t_pars;
 
