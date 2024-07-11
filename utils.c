@@ -19,7 +19,8 @@ void ft_sleep(size_t time)
 void print_state(t_pars *args, int id, const char *state)
 {
 	pthread_mutex_lock(&(args->print_mutex));
-	printf("%ld %d %s\n", get_timestamp() - args->start_time, id, state);
+	if (!args->stop_simulation)
+		printf("%ld %d %s\n", get_timestamp() - args->start_time, id, state);
 	pthread_mutex_unlock(&(args->print_mutex));
 }
 
@@ -38,6 +39,6 @@ void take_forks(t_philo *philo)
 
 void put_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(&(philo->left_fork));
+	pthread_mutex_unlock(philo->right_fork);
 }

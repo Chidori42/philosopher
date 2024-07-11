@@ -5,28 +5,31 @@ void *monitor_thread(void *arg)
 {
 	int i;
 	t_pars *args;
-	long current_time;
 
 	args = (t_pars *)arg;
 	while (1)
 	{
-		if (args->stop_simulation)
-			break ;
+		pthread_mutex_lock(&(args->simulation_mutex));
+		if (args->stop_simulation == 1)
+		{
+			pthread_mutex_unlock(&(args->simulation_mutex));
+			return (NULL);
+		}
+		pthread_mutex_unlock(&(args->simulation_mutex));
 		i = -1;
-		current_time = get_timestamp();
 		while (++i < args->n_philos)
 		{
-			pthread_mutex_lock(&(args->dead));
-			if ((current_time - (args->philos[i].last_eat)) > (args->t_die))
+			pthread_mutex_lock(&(args->philos[i].mutex));
+			if ((get_timestamp() - (args->philos[i].last_eat)) > (args->t_die))
 			{
 				print_state(args, args->philos[i].id, "died");
 				args->stop_simulation = 1;
-				pthread_mutex_unlock(&(args->dead));
+				pthread_mutex_unlock(&(args->philos[i].mutex));
 				return (NULL);
 			}
-			pthread_mutex_unlock(&(args->dead));
+			pthread_mutex_unlock(&(args->philos[i].mutex));
 		}
-		usleep(10000);
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -44,6 +47,7 @@ int main(int ac, char **av)
 		init_mutexes(&args);
 		init_philosophers(&args);
 		pthread_create(&monitor, NULL, monitor_thread, &args);
+		join_philosophers(&args);
 		pthread_join(monitor, NULL);
 		destroy_mutexes(&args);
 		free(args.philos);

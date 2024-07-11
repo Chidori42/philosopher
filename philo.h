@@ -15,25 +15,24 @@ typedef struct s_philo
 	long last_eat;
 	pthread_t thread;
 	struct s_pars *args;
+	pthread_mutex_t mutex;
 	pthread_mutex_t *right_fork;
 	pthread_mutex_t left_fork;
 } t_philo;
 
 typedef struct s_pars
 {
-	int i;
-	int n_philos;
-	int t_die;
-	int t_eat;
-	int t_sleep;
-	int n_eat;
-	long start_time;
-	int stop_simulation;
+	int 			i;
+	int 			n_philos;
+	int 			t_die;
+	int 			t_eat;
+	int 			t_sleep;
+	int 			n_eat;
+	long 			start_time;
+	int 			stop_simulation;
 	pthread_mutex_t print_mutex;
-	pthread_mutex_t meal_mutex;
-	pthread_mutex_t stop_meal;
-	pthread_mutex_t dead;
-	t_philo *philos;
+	pthread_mutex_t simulation_mutex;
+	t_philo 		*philos;
 } t_pars;
 
 
